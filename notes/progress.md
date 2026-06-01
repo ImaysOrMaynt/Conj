@@ -70,6 +70,44 @@ powerful solution has `4 ‖ m` and `27 ‖ m`, writing `m = 2²·3³·M` gives
 `R(m) = 2·R(M)`, forcing `R(M) = 1`, hence `M = 1` and `m = 108`. Thus
 `2²·3³` exactly exhausts the budget `R = 2`. (Verified: `code/conj.py`.)
 
+### 1.1 The conjecture *is* the Crux — so the targets are local, not families
+
+The conjecture is `n ≡ 108 (mod 216)`. By CRT (`216 = 8·27`) this is
+`v₂(n) = 2` **and** `27 | n`, and since both involve exponents `≥ 2` they are
+conditions on the powerful core: `v₂(m) = 2` and `v₃(m) ≥ 3`. Note we need only
+`v₃ ≥ 3`, **not** `v₃ = 3`, and **not** "no other primes." But those two *local*
+conditions already force everything:
+
+> **Proposition 0 (the local conditions are the whole conjecture).** If `m` is
+> powerful with `R(m) = 2`, `v₂(m) = 2`, and `v₃(m) ≥ 3`, then `m = 108`.
+>
+> *Proof.* `R(m) = R(2²)·R(3^{v₃})·R(rest) = (7/5)·R(3^{v₃})·R(rest)` with `rest`
+> powerful and coprime to 6. As `R` is strictly increasing, `v₃ ≥ 3 ⟹
+> R(3^{v₃}) ≥ R(3³) = 10/7`, and `R(rest) ≥ 1`. Hence `2 = R(m) ≥ (7/5)(10/7)(1)
+> = 2`, so equality holds throughout: `R(3^{v₃}) = 10/7` (so `v₃ = 3`) and
+> `R(rest) = 1` (so `rest = 1`). Therefore `m = 2²·3³ = 108`. ∎
+
+So **conjecture ⟺ Crux** (they are equivalent, not merely one-way), and the
+equivalence has a payoff: a proof never has to bound `ω(m)` or rule out large
+primes — the budget step does that for free. The whole problem collapses to
+**local divisibility**:
+
+> **conjecture ⟺ every powerful solution `m` satisfies `2 | m`, `3 | m`, and
+> `v₃(m) ≠ 2`.**
+
+Indeed, once `6 | m`, the source's Theorem 4 gives `v₂ = 2` and `v₃ ∈ {2,3}`;
+Proposition 0 turns `v₃ = 3` into `m = 108`; so only three global lemmas remain,
+**none mentioning `ω`**:
+
+- **(α)** no powerful solution is odd (`2 | m`);
+- **(β)** every powerful solution is divisible by 3 (`3 | m`);
+- **(γ)** no solution has `v₃(m) = 2` — equivalently `R(M) = 100/91` is unsolvable
+  for powerful `M` coprime to 6.
+
+This is the correct way to aim the attack: prove (α), (β), (γ) as divisibility
+statements, **not** by enumerating `ω = 2, 3, …` families. §3.4 records where each
+stands.
+
 ---
 
 ## 2. A new local identity at the prime 3
@@ -205,6 +243,36 @@ value is below the prime's sup `p/(p−1)`, making the exponent range finite. Fo
 so the exponent of 3 is **not** bounded by this method; those two families are only
 verified to exponent 20000. This is exactly the global obstruction (a small prime
 whose contribution never saturates) appearing inside a 3-prime cage.
+
+### 3.4 Status of the three local targets (α), (β), (γ)
+
+By Proposition 0 (§1.1) the conjecture is equivalent to `(α) 2|m`, `(β) 3|m`,
+`(γ) v₃(m)≠2` for every powerful solution `m`. This reframing is the right one —
+it eliminates the false goal "bound `ω`" — but it does **not** make the wall
+vanish; it concentrates it into each target:
+
+- **(α) `2 | m`** ⟺ no *odd* powerful solution. An odd solution is exactly a
+  powerful `m` coprime to 2 with `∏_{p|m} R(pᵃ) = 2` — an abundancy-`2` equation in
+  odd primes with no a-priori bound on the number of primes. So (α) is the original
+  difficulty restricted to odd `m`; the 2-adic identity is consistent with odd `m`
+  (it never sees `v₂`), and Theorem D's construction can be made odd, so no local
+  invariant kills it.
+- **(β) `3 | m`** ⟺ no powerful solution coprime to 3 — again abundancy-`2` over
+  primes `≠ 3`, unbounded prime count. The 3-adic identity (★) is satisfiable with
+  `3 ∤ m` (e.g. Theorem D's `m_K`), so it does not force `3 | m`.
+- **(γ) `v₃ ≠ 2`** ⟺ `R(M) = 100/91` unsolvable for `M` coprime to 6 — abundancy
+  with target `100/91`, again unbounded prime count (large primes contribute
+  `≈ 1`). Its nontrivial denominator `91 = 7·13` forces `7,13 | σ*(M)` but does not
+  pin a unique prime, so a Pomerance-`93/40`-style argument does not obviously apply.
+
+**Honest assessment.** The weakening clarifies the goal and removes any need to
+control large primes *in the conclusion*, but each of (α),(β),(γ) is itself an
+"abundancy = constant with unbounded `ω`" statement — the same wall, now in three
+sharp pieces. If a proof exists, the most likely entry point is (α) or (β): a
+*global* obstruction to a solution avoiding a single small prime (a parity/character
+or genus-type argument peculiar to the missing prime), which is a different kind of
+statement from "bound `ω`." I did not find one. I record this as the precise open
+problem rather than a case ladder.
 
 ---
 
