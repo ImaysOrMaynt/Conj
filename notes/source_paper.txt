@@ -1,0 +1,396 @@
+Powerful solutions of σ(n) = 2σ∗(n):
+a structural reduction of an OEIS conjecture
+
+Working notes
+
+June 2026
+
+Abstract
+
+Let σ be the sum-of-divisors function and σ∗ the sum-of-unitary-divisors function. We study
+
+the conjecture (R. Stephan, “Prove or disprove” #35; OEIS A063880) that
+
+σ(n) = 2σ∗(n) =⇒ n ≡ 108
+
+(mod 216).
+
+After reducing to a statement about powerful numbers, we record a body of results that com-
+pletely settle several sub-cases and isolate the remaining difficulty to a single precise question.
+The centrepiece is an exact identity, R(22)R(33) = 2, which collapses the conjecture to two
+local conditions on the prime factorisation. We prove the two-prime case outright, settle the
+6 | n case up to one explicit residual equation, and establish 2-adic, cyclotomic, and abundancy
+constraints. We then locate the open kernel exactly: it is the inability to bound ω(n), the same
+obstruction that has kept unitary perfect numbers open since 1966 — though, unlike those
+problems, ours carries a convergent heuristic predicting finiteness.
+
+1 Setup
+
+For n = (cid:81)
+unitary divisors d ∥ n (those with gcd(d, n/d) = 1). Both are multiplicative. Define
+
+i write σ(n) = (cid:81)
+
+and σ∗(n) = (cid:81)
+
+i + 1(cid:1), the latter being the sum of the
+
+i pai
+
+(cid:0)pai
+
+−1
+
+i
+
+i
+
+ai+1
+p
+i
+pi−1
+
+R(n) =
+
+σ(n)
+σ∗(n)
+
+(cid:89)
+
+=
+
+R(pa),
+
+R(pa) =
+
+pa∥n
+
+1 + p + · · · + pa
+pa + 1
+
+=
+
+pa+1 − 1
+(p − 1)(pa + 1)
+
+.
+
+The defining equation is exactly R(n) = 2. The following elementary facts are used throughout.
+
+Lemma 1. For a prime p and a ≥ 1:
+
+(i) R(p) = 1;
+
+(ii) R(pa+1) − R(pa) =
+
+pa(p + 1)
+(pa + 1)(pa+1 + 1)
+
+> 0, so R(pa) is strictly increasing in a;
+
+(iii) R(pa) <
+
+p
+p − 1
+
+, with R(pa) ↑
+
+p
+p − 1
+
+as a → ∞;
+
+(iv) consequently R(pa) > 1 for all a ≥ 2, and R(n) = R(m) where m is the powerful part of n
+
+(the product of the prime powers pa ∥ n with a ≥ 2).
+
+By (i) and (iv), squarefree prime factors are invisible to R. Hence every solution n factors as
+n = m·s with m powerful, s squarefree, gcd(m, s) = 1, and R(n) = R(m). The conjecture therefore
+reduces to a statement about the powerful “cores”.
+
+1
+
+Crux. The only powerful m with R(m) = 2 is m = 108 = 22 · 33.
+
+If the Crux holds, then every solution is 108 s with s squarefree and coprime to 6, whence
+n ≡ 108 (mod 216), which is the conjecture. (This reduction, and a verification of the Crux to
+1018, were also obtained independently by A. Eldar in the OEIS entry; the Crux itself remains
+open.)
+
+2 The collapse
+
+Theorem 2 (Collapse / reduction). R(22) R(33) = 7
+m satisfies 4 ∥ m and 27 ∥ m, then m = 108. Equivalently,
+
+5 · 10
+
+7 = 2. Consequently, if a powerful solution
+
+the Crux ⇐⇒ every powerful solution m has v2(m) = 2 and v3(m) = 3.
+
+Proof. Suppose 4 ∥ m, 27 ∥ m, and write m = 22 · 33 · M with M powerful and coprime to 6. Then
+R(m) = R(22)R(33)R(M ) = 2R(M ), so R(m) = 2 forces R(M ) = 1. By Lemma 1(iv), R(M ) > 1
+for any powerful M > 1; hence M = 1 and m = 108.
+
+Thus 22 · 33 exactly exhausts the budget R = 2: any further powerful factor strictly increases
+R. This is the structural reason 108 is the answer, and it explains the modulus 216 = 23 · 33 in the
+conjecture (v2 = 2 together with 27 | n).
+
+3 The two-prime case
+
+Theorem 3. The only powerful m with ω(m) ≤ 2 and R(m) = 2 is 108.
+
+Proof. If ω(m) = 1 then R(pa) < p
+two odd primes 3 ≤ P < Q give R(m) < P
+the form m = 2aP b with P odd, a, b ≥ 2.
+
+p−1 ≤ 2 by Lemma 1(iii), strictly, so no solution. For ω(m) = 2,
+8 < 2; so a two-prime solution has
+
+P −1 · Q
+
+Q−1 ≤ 3
+
+4 = 15
+
+2 · 5
+
+Use the identity σ(2a) = 2a+1 − 1 = 2(2a + 1) − 3 = 2σ∗(2a) − 3. Writing u = 2a + 1, the
+
+equation σ(2a)σ(P b) = 2u(P b + 1) becomes
+
+2u(cid:0)σ(P b) − P b − 1(cid:1) = 3 σ(P b),
+
+i.e.
+
+2u (P + P 2 + · · · + P b−1) = 3 σ(P b).
+
+Reducing mod P : the left side is ≡ 0 (each term carries a factor P , as b ≥ 2), while σ(P b) ≡ 1. Hence
+0 ≡ 3 (mod P ), so P = 3. With P = 3 the equation reduces (set y = 3b−1) to u = 9y−1
+2(y−1) = 9
+y−1 ;
+for u = 2a + 1 a positive integer this forces y = 9, i.e. b = 3, a = 2. Thus m = 22 · 33 = 108.
+
+2 + 4
+
+4 The case 6 | m
+
+Theorem 4. Let m be a powerful solution with 6 | m. Then v2(m) = 2 and v3(m) ∈ {2, 3}.
+Moreover:
+
+(cid:136) if v3(m) = 3 then m = 108;
+
+(cid:136) if v3(m) = 2 then m = 36 M with M powerful, coprime to 6, and R(M ) = 100
+
+91 ; every such M
+
+has ω(M ) ≥ 3 and all prime factors ≥ 11.
+
+In particular, 6 | m implies m = 108 unless the residual equation R(M ) = 100
+
+91 has a solution.
+
+2
+
+Proof. Write m = 2a3bM , a, b ≥ 2, M powerful coprime to 6, R(M ) ≥ 1. If a ≥ 3 then R(m) ≥
+R(23)R(32) = 5
+6 > 2, impossible; so a = 2 and R(3b)R(M ) = 2
+3 · 13
+R(22) = 10
+7 . If b ≥ 4 then
+7 , impossible; so b ∈ {2, 3}. For b = 3, R(M ) = 10/7
+R(3b) ≥ R(34) = 121
+10/7 = 1, so M = 1 and
+m = 108. For b = 2, R(M ) = 10/7
+
+10 = 13
+82 > 10
+
+13/10 = 100
+91 .
+
+For the residual:
+
+91 lies strictly between R(112) = 133
+
+if a prime p ≤ 7 divided M then R(M ) ≥ R(p2) ≥ R(72) = 57
+
+50 > 100
+91 ,
+impossible; so every prime of M is ≥ 11. A single prime power cannot equal 100
+91 (for p = 11 the
+122 and R(113) = 122
+value 100
+91 ),
+so ω(M ) ≥ 2. The case ω(M ) = 2 is excluded by a finite computation (the two-sided bound
+R(pa) ∈ [R(p2), p
+p−1 ) confines the second prime to an interval that contains no admissible value),
+leaving ω(M ) ≥ 3.
+
+111 ; for p ≥ 13, R(pa) < p
+
+p−1 ≤ 13
+
+12 < 100
+
+Remark 5. The residual is also empty below ∼ 1016: if R(M ) = 100
+would be a powerful solution other than 108, contradicting the verification to 1018.
+
+91 then R(36M ) = 2, so 36M
+
+5 Structural constraints
+
+Theorem 6 (2-adic identity). Let m = 2e0 (cid:81)k
+solution satisfies
+
+i=1 P ei
+
+i with the Pi odd, and let O = {i : ei odd}. Any
+
+(cid:88)
+
+v2(ei + 1) = 1 + k.
+
+In particular O ̸= ∅, and at least one odd prime occurs to an exponent ≡ 3 (mod 4).
+
+i∈O
+
+Proof sketch. By the lifting-the-exponent lemma at 2, for odd P one has v2(σ(P e)) = v2(P + 1) +
+v2(e + 1) − 1 when e is odd and 0 when e is even, while v2(P e + 1) = v2(P + 1) or 1 accordingly.
+Matching v2 across σ(m) = 2σ∗(m), the terms (cid:80)
+i∈O v2(Pi + 1) cancel, leaving the stated identity.
+For 108: k = 1, O = {3}, and v2(3 + 1) = 2 = 1 + 1.
+
+Theorem 7 (Cyclotomic entanglement). For each prime power pai
+i ∥ m (with the sole exception
+25), the primitive prime divisor q of Φai+1(pi) — which satisfies q ≡ 1 (mod ai + 1) — divides
+paj
+j + 1 for some j ̸= i.
+Proof sketch. By Zsygmondy’s theorem such a q exists (ai + 1 ≥ 3), divides σ(pai
+hand side 2 (cid:81)
+would force (ai + 1) | 2ai, i.e. ai ≤ 1, contradicting powerfulness.
+Proposition 8 (Abundancy lower bounds). The bound (cid:81)
+p
+p−1 > 2 holds for every solution.
+Hence if m is coprime to 6 then ω(m) ≥ 7, and the bound grows sharply as small primes are
+excluded:
+
+j + 1; and j = i is impossible, since q | pai
+
+j + 1). As q is odd it divides some paj
+
+i ), hence the right-
+i + 1
+
+j(paj
+
+p|m
+
+least prime of m 5
+
+ω(m) ≥
+
+7
+
+23
+11 13 17 19
+7 15 27 41 62 85 115
+
+6 Computational and heuristic status
+
+Verification. The only powerful solution below 1018 is 108; equivalently, no solution n ≤ 1018
+violates the conjecture.
+
+3
+
+Why finiteness is expected. Powerful numbers have Dirichlet series (cid:80)
+so
+
+m powerful m−s = ζ(2s)ζ(3s)/ζ(6s),
+
+(cid:88)
+
+m powerful
+
+1
+m
+
+√
+
+=
+
+ζ(2)ζ(3)
+ζ(6)
+
+√
+
+≈ 1.944 < ∞,
+
+and their counting function is ∼ ζ(3/2)
+x. Modelling σ(m) = 2σ∗(m) as a value hit
+ζ(3)
+with probability ≍ 1/m gives a finite expected number of powerful solutions, with tail beyond X of
+size ≍ X −1/2 (about 2 × 10−9 beyond 1018). This convergence — in contrast to the logarithmically
+divergent sums underlying perfect and unitary perfect numbers — is exactly what powerfulness
+buys, and is the strongest reason to believe 108 is the whole answer.
+
+x ≈ 2.173
+
+What rigour gives, and where it stops. Dickson’s 1913 method (finitely many odd perfect
+numbers with at most k prime factors) carries over verbatim:
+
+Theorem 9 (Dickson-type finiteness). For each fixed k, there are effectively finitely many powerful
+m with ω(m) = k and R(m) = 2.
+
+(If ω(m) = k then (cid:0) p1
+(cid:1)k > 2 bounds the least prime; recursion bounds all primes, and an S-
+p1−1
+unit / linear-forms-in-logarithms argument then bounds the exponents.) Consequently the Crux
+is decidable as soon as ω is bounded. Every result above is consistent with this; the single
+missing ingredient is an upper bound on ω(m).
+
+That bound is exactly the open obstruction. As we showed, the two-sided window (cid:81)
+
+p|m R(p2) ≤
+2 < (cid:81)
+p
+p−1 cannot cap ω: a single small prime can satisfy the upper inequality, freeing the
+remaining primes to be arbitrarily large. This is the same wall that leaves unitary perfect numbers
+open (Subbarao’s finiteness conjecture, 1966), and that places the value 2 = 2/1 in the hard regime
+— in the abundancy-index analogue σ(n)/n = r, finiteness is known to be generically intractable
+(Pomerance’s r = 93/40, with solutions exactly {80, 200}, is essentially the only nontrivial r for
+which finiteness with more than one solution has been proved, and it succeeds only because of its
+constraining denominator).
+
+p|m
+
+7 Summary
+
+Proven shell. The two-prime case (Theorem 3); the collapse reducing the Crux to “v2 = 2 and
+v3 = 3” (Theorem 2); the case 6 | m up to the residual R(M ) = 100
+91 , itself resolved for
+ω(M ) ≤ 2 and verified empty below ∼ 1016 (Theorem 4); the 2-adic identity (Theorem 6);
+cyclotomic entanglement (Theorem 7); and abundancy bounds (Proposition 8).
+
+Open kernel. Powerful solutions with 6 ∤ m (forced to have ≥ 7 prime factors if coprime to 6),
+together with the ω ≥ 3 residual. This kernel is of odd-perfect / unitary-perfect grade: the
+entire gap is a bound on ω(m), which no current method supplies.
+
+Belief. Theorem 9 plus the convergent heuristic make finiteness — and indeed uniqueness of 108
+
+— overwhelmingly likely; what is missing is a proof, not evidence.
+
+References (informal). R. Stephan, Prove or disprove. 100 conjectures from the OEIS, arXiv:math/0409509,
+#35; OEIS A063880 (and comments by A. Eldar); L. E. Dickson, Finiteness of the odd perfect and
+primitive abundant numbers with n distinct prime factors, Amer. J. Math. 35 (1913); C. R. Wall,
+Bi-unitary perfect numbers, Proc. AMS 33 (1972) [bi-unitary perfect = {6, 60, 90}]; M. V. Subbarao
+& L. J. Warren, Unitary perfect numbers, Canad. Math. Bull. 9 (1966); P. Pollack & C. Pomerance,
+
+4
+
+Some problems of Erd˝os on the sum-of-divisors function, and related work on the distribution of
+σ(n)/n.
+
+5
+
+
