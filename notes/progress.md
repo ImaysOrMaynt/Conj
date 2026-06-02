@@ -274,6 +274,40 @@ or genus-type argument peculiar to the missing prime), which is a different kind
 statement from "bound `ω`." I did not find one. I record this as the precise open
 problem rather than a case ladder.
 
+### 3.5 An honest attempt at (α) and (β), and why the local route is closed
+
+I tried to prove (α) "no odd solution" and (β) "`3 ∣ m`" directly. Every natural
+obstruction turns out to be *consistent* with avoiding the prime, and this can be
+made into a theorem — a barrier specific to (α) and (β):
+
+> **Theorem E (local invariants don't force `2 ∣ m` or `3 ∣ m`).** For every `K`:
+> (a) there is an **odd** powerful `m` with `ω(m) ≥ K` satisfying the two-sided
+> abundancy window and both the 2-adic and 3-adic identities; (b) likewise there is
+> a powerful `m` **coprime to 3** with `ω(m) ≥ K` satisfying all three. Hence no
+> argument from those invariants can prove (α) or (β).
+
+*Proof.* (b) is Theorem D verbatim: its `m_K = 2²·p_1^{e_1}·p_2²⋯p_{K−1}²` with all
+`p_i ≡ 2 (mod 3)` is already coprime to 3. (a) Drop the `2²` and rebalance: take the
+prime set `{3,5,7} ∪ {K−3` large odd primes`}` (so `∏ p/(p−1) ≥ (3/2)(5/4)(7/6) =
+35/16 > 2`, and `∏ R(p²) = (13/10)(31/26)(57/50)·∏_{large}R(p²) ≤ 2` once the large
+primes are big enough that `∏_{large} R(p²) ≤ 10·16/(35·… ) `, i.e. their reciprocal
+sum is small). Give one large prime `≡ 2 (mod 3)` an odd exponent `e` with
+`v₂(e+1)=1+ω` and `e ≡ 1 (mod 3)` (possible by choosing the odd part of `e+1` mod 3);
+give every prime `≡ 1 (mod 3)` an even exponent `≡ 1 (mod 3)` (e.g. `4`, so
+`3∤a+1`); give the rest exponent `2`. Then `O` is the single odd-exponent prime, the
+2-adic identity reads `v₂(e+1)=1+ω`, and every 3-adic term `D₃(p,a)` vanishes, so
+(★) holds. `m` is odd, powerful, `ω = K`. ∎
+
+The moral: the 2-adic and 3-adic identities, and abundancy, are **blind to the
+presence of any single small prime** — they constrain *exponents and prime counts*,
+never *which* primes occur. So (α) and (β) cannot be theorems of these invariants;
+they would require a genuinely global mechanism (e.g. forcing a specific small prime
+to divide `σ*(m)` and then to divide `m`, of the kind that closes Pomerance's
+`93/40` but is not available for the denominator-`1` target `2`). I did not find such
+a mechanism, and I do not believe one is currently within reach — this is the same
+barrier, honestly located. The conjecture is, as far as method goes, of odd /
+unitary-perfect grade.
+
 ---
 
 ## 4. Computational verification (independent)
