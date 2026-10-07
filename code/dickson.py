@@ -39,6 +39,7 @@ from math import prod
 from conj import R_pp
 
 _SMALL = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
+WIDE_WINDOW = 2000      # last-prime window (in integers) above which exponents are pinned first
 
 
 def is_prime(n):
@@ -158,6 +159,17 @@ def solve_free(target, k, primes, max_nodes=10**6, start=None):
                 continue
             if P <= q_lo:
                 stack.append((chosen, j, primes.first_at_least(int(q_lo) + 1)))
+                continue
+            # A wide window would be walked one prime at a time; pin exponents
+            # first instead (each pinned exponent turns the window into the
+            # closed-form solve, and the windows shrink geometrically as an
+            # exponent grows, so infinite chains still converge).
+            if x_min <= 1 or 1 / (x_min - 1) + 1 - P > WIDE_WINDOW:
+                i = max((t for t, (_, _, o) in enumerate(chosen) if o),
+                        key=lambda t: highs[t] / lows[t])
+                p, e, _ = chosen[i]
+                stack.append((chosen[:i] + ((p, e + 1, True),) + chosen[i + 1:], j, P))
+                stack.append((chosen[:i] + ((p, e, False),) + chosen[i + 1:], j, P))
                 continue
         # widest ratio: open exponents vs the free block
         best, best_ratio = None, Fraction(1)
