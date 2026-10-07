@@ -481,7 +481,7 @@ case its node cap trips. Results (all in `code/run_all.py` except the per-`a` ru
 - **The residual `R(M) = 100/91` has no solution with `ω(M) ≤ 4`** (source: `≥ 3`; `ω ≤ 3`
   in `run_all.py`, `ω = 4` takes 3.69M nodes, ~100 s), so a `6 | m` counterexample needs
   `ω(m) ≥ 7`. (`ω(M) = 5` did not finish within 10⁸ nodes.)
-- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 22` (exact, per `a`), well
+- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 25` (exact, per `a`), well
   beyond the `a ≲ 12` implied by the `10¹⁸` search. Not a proof for all `a` (§5.2).
 
 ### 5.2 Correction: Dickson's method needs more than bounded ω when 2 | m, 3 ∤ m
