@@ -16,13 +16,14 @@ the
 
 and the Crux is in turn equivalent to: *every powerful solution has v₂ = 2 and
 v₃ = 3*. I did **not** find a complete proof, and I want to be candid about why:
-the entire residual difficulty is a single missing ingredient — **an upper bound
-on ω(m)** (the number of distinct primes). With `ω` bounded, the Crux is decidable
-(Dickson's 1913 method, made effective by linear forms in logarithms). Bounding
-`ω` for an abundancy-type target `σ/σ* = 2` is of the same grade as the open
-problems on odd perfect and unitary perfect numbers; no current technique supplies
-it, and the source notes already identify this wall. I therefore did **not**
-manufacture a proof. Claiming one would be wrong.
+the residual difficulty is **controlling ω(m)** (the number of distinct primes).
+Bounding `ω` for an abundancy-type target `σ/σ* = 2` is of the same grade as the
+open problems on odd perfect and unitary perfect numbers; no current technique
+supplies it, and the source notes already identify this wall. (Correction, §5.2: a
+bound on `ω` is *not* known to make the Crux decidable by itself, contrary to the
+source's Theorem 9 — when `2 | m` and `3 ∤ m` the exponent of 2 escapes Dickson's
+method, and the smallest such case, IIIa at `ω = 3`, is open.) I therefore did
+**not** manufacture a proof. Claiming one would be wrong.
 
 What this document *does* contribute, all checked by exact computation in `code/`:
 
@@ -33,11 +34,12 @@ What this document *does* contribute, all checked by exact computation in `code/
    `ω(m) = 2` (i.e. `m = 108`) or `ω(m) ≥ 5`** — so *no* solution has `6 | m` with
    `ω ∈ {3,4}`. Combined with the abundancy bound this pins the shape of every
    `ω = 3` solution and reduces the odd case to a **finite** family.
-3. **A genuinely closed sub-case**: there is **no powerful solution of the form
-   `3ᵃ·5ᵇ·7ᶜ`** — proved rigorously by an exact interval squeeze in which *all*
-   exponents are provably bounded (§3.3). The neighbouring families `3ᵃ5ᵇ11ᶜ`,
-   `3ᵃ5ᵇ13ᶜ` are verified to exponent 20000 but *not* closed — the unbounded-
-   exponent wall reappears there in miniature, which is instructive.
+3. **A closed case: IIIb is empty.** There is **no powerful solution with
+   `ω(m) = 3`, `3 | m`, `2 ∤ m`** — the three families `3ᵃ·5ᵇ·7ᶜ`, `3ᵃ·5ᵇ·11ᶜ`,
+   `3ᵃ·5ᵇ·13ᶜ` are each ruled out by an exact squeeze (Theorems C, C′, §3.3). So
+   every `ω = 3` solution has the form `2ᵃqᵇrᶜ` with `3 ∤ m` (IIIa). The squeeze is
+   implemented as a branch-and-bound that provably terminates for *any* fixed set
+   of primes, so fixed-prime families are never the obstruction.
 4. **Independent verification** that 108 is the only powerful solution
    `≤ 10¹⁷` (and a run to `10¹⁸` reproducing the OEIS record), via a structural
    rational search rather than naïve enumeration (§4).
@@ -46,6 +48,10 @@ What this document *does* contribute, all checked by exact computation in `code/
 
 Everything below is either a recap (clearly marked), a result with a proof, or a
 computational statement with the script that produces it.
+
+*Literature check (2026-10-07):* the `openai/math` collection (722 model-generated
+manuscripts, released 2026-10-06) contains nothing on `σ*`, unitary or odd perfect
+numbers, or A063880 (full-text search of all its sources).
 
 ---
 
@@ -212,12 +218,12 @@ If `m` is coprime to 6 this forces `ω(m) ≥ 7`. Together with Proposition A:
 >   restriction on `q, r` — the prime 2 alone supplies the factor 2.)*
 > - **(IIIb) `3 | m`, `2 ∤ m`:** `m = 3ᵃ qᵇ rᶜ`, and abundancy
 >   `(3/2)(q/(q−1))(r/(r−1)) > 2` forces `(q,r) ∈ {(5,7), (5,11), (5,13)}` —
->   a **finite** family.
+>   a **finite** family, and in fact an **empty** one (Theorems C, C′, §3.3).
 
 (Both bullet computations: `code/` — the IIIb enumeration returns exactly those
 three pairs; IIIa returns an unbounded list.)
 
-### 3.3 Theorem: no powerful solution `3ᵃ·5ᵇ·7ᶜ`
+### 3.3 Theorems C, C′: case IIIb is empty
 
 > **Theorem C (new).** The equation `R(3ᵃ)R(5ᵇ)R(7ᶜ) = 2` has **no** solution with
 > `a,b,c ≥ 2`. Equivalently, no powerful solution has core `3ᵃ·5ᵇ·7ᶜ`.
@@ -237,12 +243,50 @@ three pairs; IIIa returns an unbounded list.)
   and `R(5³) = 26/21 = 1.2381… > 70/57`, with `R(5ᵇ)` increasing. No `b` lands in
   the interval. ∎
 
-The squeeze is **rigorous** precisely because at each level the upper feasibility
-value is below the prime's sup `p/(p−1)`, making the exponent range finite. For
-`(3,5,11)` and `(3,5,13)` the level-1 upper value `2/(R(5²)R(p²))` *exceeds* `3/2`,
-so the exponent of 3 is **not** bounded by this method; those two families are only
-verified to exponent 20000. This is exactly the global obstruction (a small prime
-whose contribution never saturates) appearing inside a 3-prime cage.
+> **Theorem C′ (new).** Neither `R(3ᵃ)R(5ᵇ)R(11ᶜ) = 2` nor `R(3ᵃ)R(5ᵇ)R(13ᶜ) = 2`
+> has a solution with `a,b,c ≥ 2`. With Theorem C and Proposition B: **case IIIb is
+> empty** — no powerful solution has `ω(m) = 3`, `3 | m`, `2 ∤ m`.
+
+The trick is the order of elimination: squeezing the exponent of 3 first is vacuous
+here (see the remark below), but splitting on the exponent of **5** first closes both.
+Write `X = R(3ᵃ) ∈ [13/10, 3/2)`, `Y = R(5ᵇ) ∈ [31/26, 5/4)`; all steps are exact
+(`code/three_primes.py`, and every inequality below was re-checked in `Fraction`s).
+
+*Proof for `3·5·11`* (`Z = R(11ᶜ) ∈ [133/122, 11/10)`).
+- `b = 2` is impossible: `XZ = 2/R(5²) = 52/31 > 33/20 = (3/2)(11/10) > XZ`.
+- So `b ≥ 3`, `Y ∈ [26/21, 5/4)`, `XZ ∈ (8/5, 21/13]`, hence
+  `X ∈ (16/11, 366/247] = (1.4545…, 1.4817…]`. As `R(3³) = 10/7 < 16/11` and
+  `R(3⁵) = 91/61 > 366/247`, this forces `a = 4`, `X = 121/82`.
+- Then `YZ = 164/121`, so `Y ∈ (1640/1331, 20008/16093] = (1.2321…, 1.2432…]`, which
+  contains only `R(5³) = 26/21` (`R(5²) < 1.2321`, `R(5⁴) = 781/626 > 1.2433`): `b = 3`.
+- Then `Z = 1722/1573 = 1.09472…`, strictly between `R(11²) = 133/122` and
+  `R(11³) = 122/111`. No `c`. ∎
+
+*Proof for `3·5·13`* (`W = R(13ᶜ) ∈ [183/170, 13/12)`).
+- `b = 2` is impossible: `XW = 52/31 > 13/8 = (3/2)(13/12)`.
+- `b = 3`: `XW = 21/13`. If `c = 2` then `X = (21/13)(170/183) > 3/2`, impossible. If
+  `c ≥ 3` then `X ∈ (252/169, 3297/2210] = (1.49112…, 1.49185…]`, which contains only
+  `R(3⁵) = 91/61 = 1.49180…`; then `W = 183/169 = 1.08284…`, strictly between
+  `R(13³) = 170/157` and `R(13⁴) = 30941/28562`. No `c`.
+- `b = 4`: `XW = 2/R(5⁴) = 1252/781`, so `X ∈ (1.47976…, 1.48919…]`, strictly between
+  `R(3⁴) = 1.47561…` and `R(3⁵) = 1.49180…`. No `a`.
+- `b ≥ 5`: `Y ∈ [R(5⁵), 5/4) = [651/521, 5/4)`, so `X ∈ (96/65, 1.48691…]
+  = (1.47692…, 1.48691…]`, again strictly between `R(3⁴)` and `R(3⁵)`. No `a`. ∎
+
+**Remark (why the first squeeze stalled; fixed primes are never the wall).** The first
+version of this section eliminated the exponent of 3 first. For `(3,5,11)` and
+`(3,5,13)` its bound `R(3ᵃ) ≤ 2/(R(5²)R(p²))` exceeds `3/2`, so it bounds nothing; I
+recorded those families as "verified to exponent 20000" and read this as the global
+obstruction in miniature. That was wrong — it was only a bad elimination order.
+`code/three_primes.py` now runs a branch-and-bound over exponent boxes: split the
+widest open coordinate into `{e}` and `{e+1, e+2, …}`, and discard a box whose exact
+range misses 2 (the upper end excluded while some exponent is open). Extending `R` by
+`R(p^∞) = p/(p−1)` makes the exponent space compact, and the search provably
+terminates for **every** fixed set of primes and every target (argument in the
+module docstring): the three IIIb families close after 7, 13 and 17 boxes, and the
+same code rediscovers `108` as the unique solution over `{2, 3}`. The genuine
+obstruction is primes that are **not** fixed — e.g. IIIa, where `q, r` range over all
+primes `≥ 5` (§5.2).
 
 ### 3.4 Status of the three local targets (α), (β), (γ)
 
@@ -360,13 +404,15 @@ Every result above is consistent with, and circles, one missing bound. Concretel
 This is the same wall that leaves **unitary perfect numbers** open (Subbarao–Warren
 1966) and that makes the abundancy target `σ/σ* = 2 = 2/1` "hard" — its denominator
 1 imposes no constraint, unlike Pomerance's `93/40` (solutions `{80, 200}`), which
-closes only because the denominator 40 forces specific small primes. The
-microcosm in §3.3 (`3·5·7` closes, `3·5·11`/`3·5·13` do not) shows the wall is not
-about size but about whether the available primes are "small enough" to saturate.
+closes only because the denominator 40 forces specific small primes. (An earlier
+version cited a "microcosm" here — `3·5·7` closing while `3·5·11`, `3·5·13` did not;
+that was an artifact of elimination order, and all three close, §3.3. With the
+primes fixed there is no wall at all: it lives entirely in primes that can escape to
+`∞` while a small prime absorbs the budget.)
 
-The honest one-line summary, matching the source: **the Crux is decidable the moment
-`ω(m)` is bounded (Dickson + linear forms in logs), and bounding `ω(m)` is the
-whole problem.**
+The source's one-line summary was: *the Crux is decidable the moment `ω(m)` is
+bounded (Dickson + linear forms in logs), and bounding `ω(m)` is the whole problem.*
+The first half needs a correction — see §5.2.
 
 ### 5.1 A barrier theorem: the standard invariants provably cannot bound ω
 
@@ -418,24 +464,62 @@ bookkeeping stays consistent. The genuine equation `R(m) = 2` is a single
 no bound on `ω` is known even with it, and the convergent powerful-number heuristic
 — not any provable inequality — is what underwrites the belief in finiteness.)
 
+### 5.2 Correction: Dickson's method needs more than bounded ω when 2 | m, 3 ∤ m
+
+The source's Theorem 9 ("Dickson's 1913 method carries over verbatim: for each fixed
+`k`, effectively finitely many powerful solutions with `ω(m) = k`") and the one-liner
+above overstate what Dickson's method gives here.
+
+Dickson's argument passes to a limit along a hypothetical infinite sequence of
+solutions with `ω = k`: each prime either stabilises (with a stable exponent, or an
+exponent `→ ∞`, contributing `p/(p−1)`) or tends to `∞` (contributing `R → 1`), and
+the limit must equal the target exactly. Saturating exponents approach from below and
+escaping primes from above, so the only dangerous limits are **two-sided** ones (some
+exponent saturating *and* some prime escaping). For odd perfect numbers Dickson kills
+these: clearing denominators, the largest saturated prime divides one side but not
+the other. Here:
+
+- **For `p = 2` there is nothing to kill.** `R(2ᵃ) ↑ 2`, which *is* the target, so
+  "`a → ∞` and every other prime `→ ∞`" is a consistent two-sided limit, and the
+  recursion cannot bound the odd primes — the same phenomenon that lets even perfect
+  numbers `2ᵃ(2^{a+1}−1)` form a potentially infinite family, and why Dickson's
+  theorem has to be restricted to *odd* perfect numbers. Theorem 4 pins `v₂ = 2` when
+  `6 | m`, so the gap is exactly the solutions with `2 | m`, `3 ∤ m`. The smallest
+  instance is **IIIa**, `m = 2ᵃqᵇrᶜ`: for each fixed `a` only finitely many `(q, r)`
+  are possible (`R(qᵇ)R(rᶜ) = 1 + 3/(2^{a+1}−1)` with `R(q²) < R(qᵇ)R(rᶜ) <
+  (q/(q−1))²` forces `(2^{a+1}−4)/3 < q < (2^{a+2}+3)/3`), but nothing bounds `a`.
+  So IIIa is open **even though `ω = 3` is fixed**.
+- **Even for odd `m` the transfer is not verbatim.** For `σ*` the largest saturated
+  prime may divide some `pᵉ + 1` on the other side, so Dickson's closing step fails.
+  The recursion still decides a fixed `ω` *provided* no two-sided limit hits 2
+  exactly, but that has to be checked rather than assumed. (For a fixed *set* of
+  primes there is no escaping prime, which is why the branch-and-bound of §3.3
+  always terminates.)
+
+Corrected summary: **with `ω` bounded, the cases `2 ∤ m` and `6 | m` reduce to
+Dickson-type recursions (modulo the two-sided check); the case `2 | m`, `3 ∤ m` needs
+a new idea already at `ω = 3`.**
+
 ---
 
 ## 6. What would actually close it
 
 In rough order of plausibility:
 
-1. **An `ω` bound for the target `2`.** Any unconditional `ω(m) ≤ B` turns the Crux
-   into a finite (if astronomical) check. This is the genuine open problem.
-2. **Close (IIIa)** `2ᵃ qᵇ rᶜ` (`q,r ≥ 5`, `3 ∤ m`): the smallest open case, and a
-   faithful model of the prime-2 obstruction. Even a conditional bound on `a` here
-   (e.g. via a primitive-prime/Zsygmondy entanglement forcing `q`, `r` small) would
-   settle `ω = 3` outright (with §3.3 and the finite IIIb families).
-3. **Finish IIIb** (`3ᵃ5ᵇ11ᶜ`, `3ᵃ5ᵇ13ᶜ`) by bounding the exponent of 3 — a clean,
-   self-contained 3-variable Diophantine problem.
+1. **An `ω` bound for the target `2`** — necessary, but by §5.2 not known to be
+   sufficient on its own: it would settle `2 ∤ m` and `6 | m` (Dickson, modulo the
+   two-sided check), not `2 | m`, `3 ∤ m`. This is the genuine open problem.
+2. **Close (IIIa)** `2ᵃ qᵇ rᶜ` (`q,r ≥ 5`, `3 ∤ m`): now the **only** open `ω = 3`
+   case (IIIb is empty, §3.3), and the smallest instance of the prime-2 obstruction
+   of §5.2 — so not a finite check. What is needed is a bound on `a` (e.g. via a
+   primitive-prime/Zsigmondy entanglement between `2^{a+1}−1`, `2ᵃ+1` and
+   `qᵇ+1`, `rᶜ+1`); that would settle `ω = 3` outright.
+3. ~~**Finish IIIb**~~ — done (Theorem C′, §3.3).
 4. **Sharpen the residual** `R(M) = 100/91` to empty, removing the `v₃ = 2` branch of
    the `6 | m` case and proving `6 | m ⟹ m = 108`.
 
-Items 2–4 are concrete and finite-flavoured; item 1 is the deep one.
+Item 4 is concrete; items 1 and 2 are the deep ones, of different kinds (a bound on
+the number of primes vs. a bound on the exponent of 2).
 
 ---
 
@@ -445,7 +529,7 @@ Items 2–4 are concrete and finite-flavoured; item 1 is the deep one.
 PYTHONPATH=code python3 code/conj.py             # core identities, R(108)=2
 PYTHONPATH=code python3 code/local_identities.py # 2-adic (Thm 6) + new 3-adic, verified
 PYTHONPATH=code python3 code/abundancy.py        # Prop 8 table, reproduced + extended
-PYTHONPATH=code python3 code/three_primes.py     # Theorem C: no 3^a 5^b 7^c
+PYTHONPATH=code python3 code/three_primes.py     # Theorems C, C': case IIIb empty
 PYTHONPATH=code python3 code/residual.py         # R(M)=100/91 reductions + empty search
 PYTHONPATH=code python3 code/fast_verify.py 1e14 # only 108 below X (rigorous prune)
 ```

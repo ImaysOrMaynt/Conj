@@ -1,95 +1,89 @@
 """
-Rigorous solver for  R(p1^a) R(p2^b) R(p3^c) = 2  with p1 < p2 < p3 FIXED primes.
+Rigorous solver for  prod_i R(p_i^{e_i}) = target  (default 2) over a FIXED set of
+primes p_1, ..., p_k, every exponent e_i >= 2.  Used to close case IIIb.
 
-Each factor satisfies  R(p^2) <= R(p^e) < p/(p-1)  and is strictly increasing in e.
-So at each level the relevant exponent lies in an interval determined by exact
-rational feasibility bounds:
+Branch-and-bound over exponent boxes.  Each coordinate of a box is either pinned
+(e_i = e) or open (e_i = e, e+1, e+2, ...).  Since R(p^e) is strictly increasing in
+e with supremum p/(p-1) (never attained), every product over a box lies in
 
-  level 1 (p1):  need target2 := 2/R(p1^a) to be reachable by {p2,p3}, i.e.
-                 R(p2^2)R(p3^2) <= target2 < (p2/(p2-1))(p3/(p3-1)).
-                 -> 2/(sup2 sup3) < R(p1^a) <= 2/(R(p2^2)R(p3^2)).
-  level 2 (p2):  R(p3^2) <= target3 := target2/R(p2^b) < p3/(p3-1).
-                 -> target2/sup3 < R(p2^b) <= target2/R(p3^2).
-  level 3 (p3):  check whether target3 equals R(p3^c) for some c.
+        [ prod R(p_i^{e_i}),  prod (R(p_i^{e_i}) if pinned else p_i/(p_i-1)) ]
 
-An exponent is *provably bounded* when its upper feasibility value is < the
-prime's sup p/(p-1) (because R(p^e) -> p/(p-1) strictly from below).  When that
-holds at every reached level, the search is finite and the verdict is RIGOROUS.
-If some level has a vacuous upper bound, we fall back to an explicit cap and the
-verdict is 'searched to cap'.
+with the upper end EXCLUDED as soon as one coordinate is open.  A box whose range
+misses the target is discarded; a fully pinned box is a point and is checked exactly;
+otherwise the open coordinate with the widest factor range is split into
+{e} and {e+1, e+2, ...}.  All arithmetic is exact (Fraction).
+
+Why this is a proof and why it always terminates: extend R by R(p^oo) = p/(p-1),
+making the exponent space compact.  Widest-first splitting shrinks every infinite
+chain of boxes to one point x of that space.  If F(x) != target, continuity prunes
+the chain; if F(x) = target with x finite, the chain ends at the point x itself; if
+F(x) = target with some coordinate of x infinite, the chain is pruned as soon as the
+finite coordinates are pinned, because then the box's (excluded) upper end is F(x).
+So no infinite chain exists and the binary tree is finite (Koenig).  In particular
+a FIXED set of primes is never an obstruction -- the solution set is always finite
+and computable.  (The genuine walls come from primes that are not fixed.)
+
+The old level-by-level squeeze (exponent of p_1 first, then p_2, ...) could not
+bound the exponent of 3 for {3,5,11} and {3,5,13} and fell back to a search cap;
+the branch-and-bound splits whichever coordinate is widest and closes both.
 """
 from fractions import Fraction
+from math import prod
+
 from conj import R_pp
 
 
-def _exp_range(p, lo_strict, hi_incl, cap):
-    """Exponents e>=2 with  lo_strict < R(p^e) <= hi_incl.  Returns (list, bounded?).
-    'bounded' is True when hi_incl < p/(p-1) (so the upper end is provably finite)."""
-    sup = Fraction(p, p - 1)
-    bounded = hi_incl < sup
-    es = []
-    e = 2
-    while True:
-        Re = R_pp(p, e)
-        if Re > hi_incl:
-            break
-        if Re > lo_strict:
-            es.append(e)
-        e += 1
-        if e > cap:
-            break
-    return es, bounded
+def solve_fixed(primes, target=Fraction(2), max_nodes=10**6):
+    """All exponent vectors (e_1, ..., e_k), every e_i >= 2, with
+    prod R(p_i^{e_i}) == target.
+
+    Returns (solutions, nodes, complete).  complete=True means the search
+    terminated, so `solutions` is provably the complete list; max_nodes is only a
+    safety net (the search always terminates, see the module docstring)."""
+    sups = [Fraction(p, p - 1) for p in primes]
+    sols, nodes = [], 0
+    stack = [tuple((2, True) for _ in primes)]     # (e, open): open means e, e+1, ...
+    while stack:
+        if nodes == max_nodes:
+            return sorted(sols), nodes, False
+        nodes += 1
+        box = stack.pop()
+        lows = [R_pp(p, e) for p, (e, _) in zip(primes, box)]
+        highs = [s if is_open else r for s, r, (_, is_open) in zip(sups, lows, box)]
+        lo, hi = prod(lows), prod(highs)
+        any_open = any(is_open for _, is_open in box)
+        if target < lo or target > hi or (any_open and target == hi):
+            continue                                # target outside the box's range
+        if not any_open:
+            sols.append(tuple(e for e, _ in box))   # a point, and lo == hi == target
+            continue
+        i = max((j for j, (_, is_open) in enumerate(box) if is_open),
+                key=lambda j: highs[j] / lows[j])
+        e = box[i][0]
+        stack.append(box[:i] + ((e, False),) + box[i + 1:])
+        stack.append(box[:i] + ((e + 1, True),) + box[i + 1:])
+    return sorted(sols), nodes, True
 
 
-def solve_three(p1, p2, p3, cap=20000):
-    sup2 = Fraction(p2, p2 - 1)
-    sup3 = Fraction(p3, p3 - 1)
-    minprod23 = R_pp(p2, 2) * R_pp(p3, 2)
-    sols = []
-    rigorous = True
-
-    # level 1: bounds on R(p1^a)
-    lo1 = Fraction(2) / (sup2 * sup3)        # strict lower
-    hi1 = Fraction(2) / minprod23            # inclusive upper
-    a_list, b1 = _exp_range(p1, lo1, hi1, cap)
-    rigorous &= b1
-
-    for a in a_list:
-        target2 = Fraction(2) / R_pp(p1, a)
-        # level 2: bounds on R(p2^b)
-        lo2 = target2 / sup3
-        hi2 = target2 / R_pp(p3, 2)
-        b_list, b2 = _exp_range(p2, lo2, hi2, cap)
-        rigorous &= b2
-        for b in b_list:
-            target3 = target2 / R_pp(p2, b)
-            # level 3: is target3 == R(p3^c)?
-            c = 2
-            while True:
-                Rc = R_pp(p3, c)
-                if Rc == target3:
-                    sols.append((a, b, c))
-                    break
-                if Rc > target3:
-                    break
-                c += 1
-                if c > cap:
-                    break
-    return sols, rigorous
+def solve_three(p1, p2, p3, target=Fraction(2)):
+    """R(p1^a) R(p2^b) R(p3^c) = target.  Returns (solutions, rigorous)."""
+    sols, _, complete = solve_fixed((p1, p2, p3), target)
+    return sols, complete
 
 
 if __name__ == "__main__":
     # The three families of case IIIb (3|m, 2 not | m, omega=3):
     families = [(3, 5, 7), (3, 5, 11), (3, 5, 13)]
     print("Case IIIb families  (m = p1^a p2^b p3^c,  R(m)=2):")
-    for (p1, p2, p3) in families:
-        sols, rig = solve_three(p1, p2, p3)
-        verdict = "RIGOROUS (all exponents provably bounded)" if rig else "searched to cap=20000"
-        print(f"  R({p1}^a)R({p2}^b)R({p3}^c)=2 : solutions={sols}   [{verdict}]")
+    for ps in families:
+        sols, nodes, complete = solve_fixed(ps)
+        verdict = (f"RIGOROUS (branch-and-bound terminated after {nodes} boxes)"
+                   if complete else f"NOT proved (node cap hit after {nodes} boxes)")
+        print(f"  R({ps[0]}^a)R({ps[1]}^b)R({ps[2]}^c)=2 : solutions={sols}   [{verdict}]")
 
-    # Sanity: the two-prime / known structure -- confirm 108 emerges as 2^2 3^3.
-    # (Use a fake third prime won't apply; instead confirm 2,3 alone via two-prime.)
-    print("\nSanity check: does the method find 108 = 2^2*3^3 in a {2,3,P} family?")
+    print("\nSanity checks:")
+    sols, nodes, complete = solve_fixed((2, 3))
+    print(f"  R(2^a)R(3^b)=2   : {sols}  complete={complete}  (expect [(2, 3)], i.e. 108)")
     for P in (5, 7, 11):
-        sols, rig = solve_three(2, 3, P)
-        print(f"  R(2^a)R(3^b)R({P}^c)=2 : {sols}  (expect none with all three >=2; 108 uses only 2,3)")
+        sols, nodes, complete = solve_fixed((2, 3, P))
+        print(f"  R(2^a)R(3^b)R({P}^c)=2 : {sols}  complete={complete}  (expect none)")

@@ -6,7 +6,7 @@ from fractions import Fraction
 from conj import R_of, R_pp
 from local_identities import D3_formula, D3_direct, v, vQ
 from abundancy import min_omega_given_least_prime
-from three_primes import solve_three
+from three_primes import solve_three, solve_fixed
 from residual import search_target
 from fast_verify import solutions_upto
 from conj import primes_upto
@@ -30,12 +30,16 @@ print("abundancy (Prop 8):")
 check("least-prime 5 -> omega>=7", min_omega_given_least_prime(5)[0] == 7)
 check("least-prime 11 -> omega>=27", min_omega_given_least_prime(11)[0] == 27)
 
-print("Theorem C and IIIb families:")
-sols357, rig357 = solve_three(3, 5, 7)
-check("R(3^a)R(5^b)R(7^c)=2 has NO solution", sols357 == [])
-check("...and the squeeze is rigorous (exponents provably bounded)", rig357 is True)
-check("R(3^a)R(5^b)R(11^c)=2 none to cap", solve_three(3, 5, 11)[0] == [])
-check("R(3^a)R(5^b)R(13^c)=2 none to cap", solve_three(3, 5, 13)[0] == [])
+print("Theorems C, C' (case IIIb closed):")
+sols23, _, complete23 = solve_fixed((2, 3))
+check("branch-and-bound rediscovers 108: R(2^a)R(3^b)=2 <=> (a,b)=(2,3)",
+      sols23 == [(2, 3)] and complete23)
+planted = R_pp(3, 4) * R_pp(7, 3) * R_pp(11, 2)
+check("branch-and-bound finds a planted solution (3^4 7^3 11^2)",
+      (4, 3, 2) in solve_fixed((3, 7, 11), planted)[0])
+for r in (7, 11, 13):
+    sols, rigorous = solve_three(3, 5, r)
+    check(f"R(3^a)R(5^b)R({r}^c)=2 has NO solution (rigorous)", sols == [] and rigorous)
 
 print("residual R(M)=100/91:")
 check("no residual M coprime to 6 below 1e12", search_target(Fraction(100, 91), 10**12, 5, (2, 3)) == [])
