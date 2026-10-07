@@ -464,6 +464,21 @@ bookkeeping stays consistent. The genuine equation `R(m) = 2` is a single
 no bound on `ω` is known even with it, and the convergent powerful-number heuristic
 — not any provable inequality — is what underwrites the belief in finiteness.)
 
+### 5.1′ Free-prime Dickson prover: new small-ω exclusions
+
+`code/dickson.py` extends the §3.3 branch-and-bound to free primes (chosen in
+increasing order; an unchosen block of `j` primes `≥ P` contributes a factor in
+`(1, ∏_{i<j} qᵢ/(qᵢ−1))`; the last prime is solved in closed form from
+`R(qᵉ) − 1 ∈ (1/(q+1), 1/(q−1))`). Exact arithmetic; it terminates — and its "none"
+is then a proof — unless a two-sided limit hits the target exactly (§5.2), in which
+case its node cap trips. Results (all in `code/run_all.py` except the per-`a` runs):
+
+- **No odd powerful solution has `ω(m) ≤ 4`.**
+- **The residual `R(M) = 100/91` has no solution with `ω(M) ≤ 3`** (source: `≥ 3`), so a
+  `6 | m` counterexample needs `ω(m) ≥ 6`.
+- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 14` (exact, per `a`), well
+  beyond the `a ≲ 12` implied by the `10¹⁸` search. Not a proof for all `a` (§5.2).
+
 ### 5.2 Correction: Dickson's method needs more than bounded ω when 2 | m, 3 ∤ m
 
 The source's Theorem 9 ("Dickson's 1913 method carries over verbatim: for each fixed
