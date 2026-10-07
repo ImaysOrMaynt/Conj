@@ -475,10 +475,13 @@ case its node cap trips. Results (all in `code/run_all.py` except the per-`a` ru
 
 - **No odd powerful solution has `ω(m) ≤ 5`** (`ω ≤ 4` in `run_all.py`; `ω = 5` takes
   1.30M nodes, ~40 s: `solve_free(2, 5, Primes(lo=3))`).
+- **No powerful solution coprime to 6 has `ω(m) ≤ 8`** (abundancy alone gives `≥ 7`;
+  `ω = 7` takes 1001 nodes, `ω = 8` takes 1.85M nodes, ~1 min:
+  `solve_free(2, k, Primes(lo=5))`). So a counterexample coprime to 6 needs `ω ≥ 9`.
 - **The residual `R(M) = 100/91` has no solution with `ω(M) ≤ 4`** (source: `≥ 3`; `ω ≤ 3`
   in `run_all.py`, `ω = 4` takes 3.69M nodes, ~100 s), so a `6 | m` counterexample needs
   `ω(m) ≥ 7`. (`ω(M) = 5` did not finish within 10⁸ nodes.)
-- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 21` (exact, per `a`), well
+- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 22` (exact, per `a`), well
   beyond the `a ≲ 12` implied by the `10¹⁸` search. Not a proof for all `a` (§5.2).
 
 ### 5.2 Correction: Dickson's method needs more than bounded ω when 2 | m, 3 ∤ m
