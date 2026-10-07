@@ -473,11 +473,12 @@ increasing order; an unchosen block of `j` primes `≥ P` contributes a factor i
 is then a proof — unless a two-sided limit hits the target exactly (§5.2), in which
 case its node cap trips. Results (all in `code/run_all.py` except the per-`a` runs):
 
-- **No odd powerful solution has `ω(m) ≤ 5`** (`ω ≤ 4` in `run_all.py`; `ω = 5` took
-  14.05M nodes, ~8 min: `solve_free(2, 5, Primes(lo=3))`).
-- **The residual `R(M) = 100/91` has no solution with `ω(M) ≤ 3`** (source: `≥ 3`), so a
-  `6 | m` counterexample needs `ω(m) ≥ 6`.
-- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 16` (exact, per `a`), well
+- **No odd powerful solution has `ω(m) ≤ 5`** (`ω ≤ 4` in `run_all.py`; `ω = 5` takes
+  1.30M nodes, ~40 s: `solve_free(2, 5, Primes(lo=3))`).
+- **The residual `R(M) = 100/91` has no solution with `ω(M) ≤ 4`** (source: `≥ 3`; `ω ≤ 3`
+  in `run_all.py`, `ω = 4` takes 3.69M nodes, ~100 s), so a `6 | m` counterexample needs
+  `ω(m) ≥ 7`. (`ω(M) = 5` did not finish within 10⁸ nodes.)
+- **IIIa** `2ᵃqᵇrᶜ` (`3 ∤ m`): no solution for each `2 ≤ a ≤ 21` (exact, per `a`), well
   beyond the `a ≲ 12` implied by the `10¹⁸` search. Not a proof for all `a` (§5.2).
 
 ### 5.2 Correction: Dickson's method needs more than bounded ω when 2 | m, 3 ∤ m
